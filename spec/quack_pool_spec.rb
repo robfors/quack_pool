@@ -61,6 +61,64 @@ RSpec.describe QuackPool do
     
     end
     
+    describe "#has_resource?" do
+    
+      context "after releasing a new resource" do
+        it "should reutrn true" do
+          resource = pool.release_resource
+          expect(pool.has_resource?(resource)).to eql true
+        end
+      end
+      
+      context "after absorbing a resource" do
+        it "should reutrn true" do
+          resource = pool.release_resource
+          pool.absorb_resource(resource)
+          expect(pool.has_resource?(resource)).to eql true
+        end
+      end
+      
+      context "when passed a non resource object" do
+        it "should raise error" do
+          expect { pool.has_resource?(1) }.to raise_error QuackPool::Error
+        end
+      end
+      
+    end
+    
+    describe "#resource_available?" do
+    
+      context "after releasing a new resource" do
+        it "should reutrn false" do
+          resource = pool.release_resource
+          expect(pool.resource_available?(resource)).to eql false
+        end
+      end
+      
+      context "after absorbing the resource" do
+        it "should reutrn true" do
+          resource = pool.release_resource
+          pool.absorb_resource(resource)
+          expect(pool.resource_available?(resource)).to eql true
+        end
+      end
+      
+      context "when passed a non resource object" do
+        it "should raise error" do
+          expect { pool.resource_available?(1) }.to raise_error QuackPool::Error
+        end
+      end
+      
+      context "when resource is from other pool" do
+        it "should raise error" do
+          pool2 = QuackPool.new(resource_class: resource_class)
+          resource = pool2.release_resource
+          expect { pool.resource_available?(resource) }.to raise_error QuackPool::Error
+        end
+      end
+      
+    end
+    
   end
   
   context "when size is specified" do

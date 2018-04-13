@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.files       = Dir.glob("{lib,spec}/**/*") + %w(Rakefile LICENSE README.md)
   s.homepage    = 'https://github.com/robfors/quack_pool'
   s.license     = 'MIT'
+  s.add_runtime_dependency 'reentrant_mutex', '~> 1'
 end
