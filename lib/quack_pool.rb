@@ -1,3 +1,5 @@
+require 'quack_pool/error'
+
 class QuackPool
 
   def initialize(resource_class: , size: Float::INFINITY)
@@ -13,8 +15,8 @@ class QuackPool
   
   def absorb_resource(resource)
     @mutex.synchronize do
-      raise ArgumentError, "'resource' does not belong to this pool" unless @resources.include?(resource)
-      raise ArgumentError, "'resource' already in pool" if @available_resources.include?(resource)
+      raise Error, "'resource' does not belong to this pool" unless @resources.include?(resource)
+      raise Error, "'resource' already in pool" if @available_resources.include?(resource)
       @available_resources.push(resource)
       @condition_variable.signal
     end
@@ -37,7 +39,7 @@ class QuackPool
   
   def build_new_resource
     new_resource = @resource_class.new
-    raise "'new_resource' must be unique" if @resources.include?(new_resource)
+    raise Error, "'new_resource' must be unique" if @resources.include?(new_resource)
     @resources << new_resource
     new_resource
   end

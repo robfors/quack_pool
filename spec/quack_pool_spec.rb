@@ -47,7 +47,7 @@ RSpec.describe QuackPool do
         it "should raise error" do
           resource = pool.release_resource
           pool.absorb_resource(resource)
-          expect { pool.absorb_resource(resource) }.to raise_error ArgumentError
+          expect { pool.absorb_resource(resource) }.to raise_error QuackPool::Error
         end
       end
       
@@ -55,7 +55,7 @@ RSpec.describe QuackPool do
         it "should raise error" do
           resource = pool.release_resource
           pool2 = QuackPool.new(resource_class: resource_class)
-          expect { pool2.absorb_resource(resource) }.to raise_error ArgumentError
+          expect { pool2.absorb_resource(resource) }.to raise_error QuackPool::Error
         end
       end
     
